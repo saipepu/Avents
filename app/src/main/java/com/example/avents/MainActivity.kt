@@ -6,17 +6,25 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.avents.View.Auth.OnBoardingView
-import com.example.avents.View.Profile.ProfileView
+import com.example.avents.view.auth.OnBoardingView
+import com.example.avents.view.profile.ProfileView
+import com.example.avents.view.auth.AuthView
+import com.example.avents.view.home.HomeView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "onboarding") {
+            NavHost(navController = navController, startDestination = "home") {
+                composable("auth") {
+                    AuthView(navController = navController)
+                }
                 composable("onboarding") {
                     OnBoardingView(navController = navController) // Your Home Screen
+                }
+                composable("home") {
+                    HomeView(navController = navController) // Your Home Screen
                 }
                 composable("profile") {
                     ProfileView(navController = navController)
@@ -25,3 +33,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            val navController = rememberNavController()
+//            NavHost(navController = navController, startDestination = "onboarding") {
+//                composable("onboarding") {
+//                    OnBoardingView(navController = navController) // Your Home Screen
+//                }
+//                composable("profile") {
+//                    ProfileView(navController = navController)
+//                }
+//            }
+//        }
+//    }
+//}

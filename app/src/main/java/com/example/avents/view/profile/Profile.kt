@@ -1,4 +1,4 @@
-package com.example.avents.View.Profile
+package com.example.avents.view.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
