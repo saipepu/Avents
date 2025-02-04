@@ -1,4 +1,4 @@
-package com.example.avents.Model
+package com.example.avents.model
 
 data class Event(
     val name: String,

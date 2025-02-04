@@ -1,4 +1,4 @@
-package com.example.avents.Model
+package com.example.avents.model
 
 import kotlinx.serialization.Serializable
 
