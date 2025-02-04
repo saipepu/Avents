@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.avents.View.Auth.OnBoardingView
+import com.example.avents.View.Profile.ProfileDetailView
 import com.example.avents.View.Profile.ProfileView
 
 class MainActivity : ComponentActivity() {
@@ -20,6 +21,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("profile") {
                     ProfileView(navController = navController)
+                }
+                composable("profileDetail") {
+                    ProfileDetailView(navController = navController)
                 }
             }
         }
