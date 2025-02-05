@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "profile") {
+            NavHost(navController = navController, startDestination = "event") {
                 composable("auth") {
                     AuthView(navController = navController)
                 }
