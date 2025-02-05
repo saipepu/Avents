@@ -17,6 +17,7 @@ fun RoleDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val role = listOf("Audience", "Organizer", "Admin")
     val oppositeRole = if (selectedRole == "Audience") "Organizer" else "Audience"
 
     Box(modifier = modifier) {
@@ -43,13 +44,17 @@ fun RoleDropdown(
             modifier = Modifier
                 .width(180.dp)
         ) {
-            DropdownMenuItem(
-                text = { Text(text = oppositeRole) },
-                onClick = {
-                    onRoleSelected(oppositeRole)
-                    expanded = false
+            role.forEach { role ->
+                if (role != selectedRole) {
+                    DropdownMenuItem(
+                        text = { Text(text = role) },
+                        onClick = {
+                            onRoleSelected(role)
+                            expanded = false
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }

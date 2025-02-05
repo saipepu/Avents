@@ -75,4 +75,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+    implementation("androidx.compose.material:material-icons-extended:1.3.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
+    implementation("androidx.activity:activity-ktx:1.3.1")
 }

@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.avents.view.auth.AuthView
 import com.example.avents.view.auth.OnBoardingView
+import com.example.avents.view.event.EventCreationForm
+import com.example.avents.view.event.EventCreationScreen
 import com.example.avents.view.home.HomeView
 import com.example.avents.view.profile.ProfileDetailView
 import com.example.avents.view.profile.ProfileView
@@ -18,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "profile") {
+            NavHost(navController = navController, startDestination = "event") {
                 composable("auth") {
                     AuthView(navController = navController)
                 }
@@ -33,6 +35,12 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("profileDetail") {
                     ProfileDetailView(navController = navController)
+                }
+                composable("event") {
+                    EventCreationScreen(navController = navController)
+                }
+                composable("eventCreationForm") {
+                    EventCreationForm(navController = navController)
                 }
             }
         }
