@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.avents.view.auth.AuthView
 import com.example.avents.view.auth.OnBoardingView
 import com.example.avents.view.home.HomeView
+import com.example.avents.view.profile.EventEditingView
 import com.example.avents.view.profile.ProfileDetailView
 import com.example.avents.view.profile.ProfileView
 
@@ -33,6 +34,10 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("profileDetail") {
                     ProfileDetailView(navController = navController)
+                }
+                composable("eventEditingView/{eventName}") { backStackEntry ->
+                    val eventName = backStackEntry.arguments?.getString("eventName") ?: "Unknown"
+                    EventEditingView(navController = navController, eventName)
                 }
             }
         }

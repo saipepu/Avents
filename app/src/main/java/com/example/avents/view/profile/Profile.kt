@@ -30,9 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.avents.R
+import com.example.avents.model.onGoingEventList
+import com.example.avents.model.upComingEventList
 import com.example.avents.ui.theme.Primary
+import com.example.avents.view.home.EventList
 
 @Composable
 fun ProfileView(
@@ -43,7 +45,7 @@ fun ProfileView(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (profileBackground, profileImage, userName, roleDropdown, profileDetailButton, tabscreen) = createRefs()
+        val (profileBackground, profileImage, userName, roleDropdown, profileDetailButton, tabscreen, onGoingEventContainer, upComingEventContainer) = createRefs()
 
         Image(
             painter = painterResource(R.drawable.background_wallpaper),
@@ -55,7 +57,7 @@ fun ProfileView(
                     end.linkTo(parent.end)
                 }
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(180.dp)
         )
 
         Image(
@@ -63,11 +65,11 @@ fun ProfileView(
             contentDescription = "Profile Image",
             modifier = Modifier
                 .constrainAs(profileImage) {
-                top.linkTo(profileBackground.bottom, margin = -85.dp)
+                top.linkTo(profileBackground.bottom, margin = -50.dp)
                 start.linkTo(parent.start)
                 }
-                .width(130.dp)
-                .height(130.dp)
+                .width(100.dp)
+                .height(100.dp)
                 .padding(horizontal = 16.dp)
         )
 
@@ -77,7 +79,7 @@ fun ProfileView(
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .constrainAs(userName) {
-                    top.linkTo(profileImage.bottom, margin = 10.dp)
+                    top.linkTo(profileImage.bottom)
                     start.linkTo(parent.start, margin = 16.dp)
                 }
         )
@@ -89,7 +91,7 @@ fun ProfileView(
             onRoleSelected = { role -> selectedRole = role },
             modifier = Modifier
                 .constrainAs(roleDropdown) {
-                    top.linkTo(userName.bottom, margin = 10.dp)
+                    top.linkTo(userName.bottom)
                     start.linkTo(parent.start)
                 }
                 .padding(horizontal = 16.dp)
@@ -101,11 +103,11 @@ fun ProfileView(
             },
             modifier = Modifier
                 .constrainAs(profileDetailButton) {
-                    top.linkTo(userName.bottom, margin = 10.dp)
+                    top.linkTo(userName.bottom)
                     start.linkTo(roleDropdown.end)
                     end.linkTo(parent.end)
                 }
-                .width(180.dp),
+                .width(160.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Primary
             ),
@@ -119,22 +121,26 @@ fun ProfileView(
         TabScreen(
             modifier = Modifier
                 .constrainAs(tabscreen) {
-                    top.linkTo(roleDropdown.bottom, margin = 10.dp)
+                    top.linkTo(roleDropdown.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            onNavigate = { eventRoute ->
+                navController.navigate(eventRoute) // Navigate when an event is clicked
+            }
         )
+
     }
 }
 
 @Composable
-fun TabScreen(modifier: Modifier = Modifier) {
+fun TabScreen(modifier: Modifier = Modifier, onNavigate: (String) -> Unit = {}) {
     var tabIndex by remember { mutableStateOf(0) }
 
     val tabs = listOf("Ongoing", "Upcoming")
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(horizontal = 16.dp)) {
         TabRow(
             selectedTabIndex = tabIndex,
             modifier = Modifier.fillMaxWidth(),
@@ -156,24 +162,36 @@ fun TabScreen(modifier: Modifier = Modifier) {
             }
         }
         when (tabIndex) {
-            0 -> ongoingScreen()
-            1 -> upcomingScreen()
+            0 -> OngoingScreen(modifier, onNavigate)
+            1 -> UpcomingScreen(modifier, onNavigate)
         }
     }
 }
 
 @Composable
-fun ongoingScreen() {
-    Text(text = "Ongoing Screen", Modifier.padding(10.dp))
+fun OngoingScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit = {},
+) {
+    EventList(
+        events = onGoingEventList,
+        modifier = modifier.padding(top = 10.dp, bottom = 150.dp),
+        onEventClick = { eventName ->
+            onNavigate("eventEditingView/$eventName")
+        }
+    )
 }
 
 @Composable
-fun upcomingScreen() {
-    Text(text = "Upcoming Screen", Modifier.padding(10.dp))
-}
-
-@Preview
-@Composable
-fun ProfileViewPreview() {
-    ProfileView(navController = rememberNavController())
+fun UpcomingScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit = {}
+) {
+    EventList(
+        events = upComingEventList,
+        modifier = modifier.padding(top = 10.dp, bottom = 150.dp),
+        onEventClick = { eventName ->
+            onNavigate("eventEditingView/$eventName")
+        }
+    )
 }

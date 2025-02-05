@@ -22,7 +22,7 @@ fun RoleDropdown(
     Box(modifier = modifier) {
         OutlinedButton(
             onClick = { expanded = true },
-            modifier = Modifier.width(180.dp),
+            modifier = Modifier.width(160.dp),
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(
@@ -41,7 +41,7 @@ fun RoleDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .width(180.dp)
+                .width(160.dp)
         ) {
             DropdownMenuItem(
                 text = { Text(text = oppositeRole) },
