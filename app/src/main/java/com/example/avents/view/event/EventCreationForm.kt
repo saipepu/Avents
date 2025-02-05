@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -126,6 +126,9 @@ fun FormView(modifier: Modifier = Modifier) {
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: android.net.Uri? ->
             imageUri = uri?.toCoilUri()
+            uri?.let {
+                println("Selected image URI: $it")
+            }
         }
     )
 
@@ -187,25 +190,25 @@ fun FormView(modifier: Modifier = Modifier) {
                 Text(text = "Upload Image", color = Color.White)
             }
         } else {
-            // Show the image when selected
             Image(
                 painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Selected Event Image",
+                contentDescription = "Event Image",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
+                    .padding(top = 10.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .constrainAs(eventImageButton) {
-                    top.linkTo(eventImageLabel.bottom, margin = 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                        top.linkTo(eventImageLabel.bottom, margin = 16.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
             )
         }
 
         // Event Location
         Text(
-            text = "Details",
+            text = "Location",
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.constrainAs(eventLocationLabel) {
