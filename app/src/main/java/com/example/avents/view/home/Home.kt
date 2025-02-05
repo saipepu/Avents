@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,22 +34,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.example.avents.R
-import com.example.avents.model.Event
+import com.example.avents.model.upComingEventList
 
 @Composable
 fun HomeView(
     navController: NavHostController,
 ) {
-    val eventList = listOf(
-        Event("Music Concert", "Feb 20, 2025", "New York"),
-        Event("Art Exhibition", "Mar 10, 2025", "Los Angeles"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-        Event("Tech Conference", "Apr 5, 2025", "San Francisco"),
-    )
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -127,32 +115,15 @@ fun HomeView(
         )
 
         EventList(
-            events = eventList,
+            events = upComingEventList,
             modifier = Modifier
                 .constrainAs(upcomingEventsContainer) {
                 top.linkTo(upcomingEvents.bottom, margin = 12.dp)
+            },
+            onEventClick = { eventName ->
+                navController.navigate("eventEditingView/$eventName")
             }
         )
 
-    }
-}
-
-@Composable
-fun EventList(
-    events: List<Event>,
-    modifier: Modifier
-) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(bottom = 200.dp)
-            .then(modifier)
-    ) {
-        items(events) { event ->
-            EventCard(
-                eventName = event.name,
-                eventDate = event.date,
-                eventLocation = event.location
-            )
-        }
     }
 }

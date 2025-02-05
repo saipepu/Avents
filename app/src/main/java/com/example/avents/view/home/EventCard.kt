@@ -21,7 +21,12 @@ import androidx.compose.ui.unit.dp
 import com.example.avents.R
 
 @Composable
-fun EventCard(eventName: String, eventDate: String, eventLocation: String) {
+fun EventCard(
+    eventName: String,
+    eventDate: String,
+    eventLocation: String,
+    onEventClick: (String) -> Unit
+) {
     Card (
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +34,8 @@ fun EventCard(eventName: String, eventDate: String, eventLocation: String) {
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
-        )
+        ),
+        onClick = { onEventClick(eventName) }
     ) {
         Column (
             modifier = Modifier.background(color = Color.White)

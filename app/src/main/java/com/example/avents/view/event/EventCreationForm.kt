@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -75,6 +77,7 @@ fun EventCreationForm(navController: NavHostController) {
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
             FormView(modifier = Modifier.padding(horizontal = 16.dp))
         }
@@ -174,6 +177,8 @@ fun FormView(modifier: Modifier = Modifier) {
 
         Button(
             onClick = { launcher.launch("image/*") },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(eventImageButton) {
@@ -182,7 +187,10 @@ fun FormView(modifier: Modifier = Modifier) {
                     end.linkTo(parent.end)
                 }
         ) {
-            Text("Upload Image")
+            Text(
+                text = "Upload Image",
+                color = Color.White
+            )
         }
 
         // Display Image Preview (optional)
