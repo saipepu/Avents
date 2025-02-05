@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -175,36 +176,30 @@ fun FormView(modifier: Modifier = Modifier) {
             }
         )
 
-        Button(
-            onClick = { launcher.launch("image/*") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(eventImageButton) {
+        if (imageUri == null) {
+            // Show the button if no image is selected
+            Button(
+                onClick = { launcher.launch("image/*") },
+                modifier = Modifier.fillMaxWidth()
+                    .constrainAs(eventImageButton) {
                     top.linkTo(eventImageLabel.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-        ) {
-            Text(
-                text = "Upload Image",
-                color = Color.White
-            )
-        }
-
-        // Display Image Preview (optional)
-        imageUri?.let {
+            ) {
+                Text(text = "Upload Image", color = Color.White)
+            }
+        } else {
             Image(
-                painter = rememberAsyncImagePainter(it),
+                painter = rememberAsyncImagePainter(imageUri),
                 contentDescription = "Event Image",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .padding(top = 10.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .constrainAs(imagePreview) {
-                        top.linkTo(eventImageButton.bottom, margin = 16.dp)
+                    .constrainAs(eventImageButton) {
+                        top.linkTo(eventImageLabel.bottom, margin = 16.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
@@ -222,6 +217,17 @@ fun FormView(modifier: Modifier = Modifier) {
             }
         )
 
+        var selectedRole by remember { mutableStateOf("Audience") }
+        UnitDropdown(
+            selectedRole = selectedRole,
+            onRoleSelected = { role -> selectedRole = role },
+            modifier = Modifier
+                .constrainAs(roleDropdown) {
+                    top.linkTo(eventLocationLabel.bottom, margin = 10.dp)
+                    start.linkTo(parent.start)
+                }
+        )
+
         OutlinedTextField(
             value = eventLocation,
             onValueChange = { eventLocation = it },
@@ -229,7 +235,7 @@ fun FormView(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(eventLocationField) {
-                    top.linkTo(eventLocationLabel.bottom, margin = 8.dp)
+                    top.linkTo(roleDropdown.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -245,17 +251,6 @@ fun FormView(modifier: Modifier = Modifier) {
             }
         )
 
-        // Event Date
-        Text(
-            text = "Date",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.constrainAs(eventDateLabel) {
-                top.linkTo(eventLocationField.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
         OutlinedTextField(
             value = eventDate,
             onValueChange = { eventDate = it },
@@ -263,7 +258,7 @@ fun FormView(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(eventDateField) {
-                    top.linkTo(eventDateLabel.bottom, margin = 8.dp)
+                    top.linkTo(eventLocationField.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -280,17 +275,6 @@ fun FormView(modifier: Modifier = Modifier) {
             enabled = false
         )
 
-        // Event Time
-        Text(
-            text = "Time",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.constrainAs(eventTimeLabel) {
-                top.linkTo(eventDateField.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
         OutlinedTextField(
             value = eventTime,
             onValueChange = { eventTime = it },
@@ -298,7 +282,7 @@ fun FormView(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(eventTimeField) {
-                    top.linkTo(eventTimeLabel.bottom, margin = 8.dp)
+                    top.linkTo(eventDateField.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -384,7 +368,7 @@ fun UnitDropdown(
         ) {
             androidx.compose.material3.Text(
                 text = selectedRole,
-                color = Primary,
+                color = Color.Black,
                 modifier = Modifier.weight(1f)
             )
             Icon(
