@@ -1,7 +1,9 @@
 package com.example.avents.view.event
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +37,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -149,11 +152,15 @@ fun EventDetails(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .constrainAs(dateBox) {
                     top.linkTo(eventDescription.bottom, margin = 16.dp)
-                    start.linkTo(parent.start, margin = 20.dp)
+                    start.linkTo(parent.start)
                 }
+                .border(
+                    width = 0.5.dp,
+                    color = Color.LightGray,
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .size(width = 80.dp, height = 60.dp),
             shape = RoundedCornerShape(8.dp),
-            elevation = 4.dp
         ) {
             Box(
                 contentAlignment = Alignment.Center,
