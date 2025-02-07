@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.avents.view.auth.AuthView
 import com.example.avents.view.auth.OnBoardingView
+import com.example.avents.view.event.EventAttendees
 import com.example.avents.view.event.EventCreationForm
 import com.example.avents.view.event.EventCreationScreen
 import com.example.avents.view.event.EventDetailView
@@ -50,6 +51,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("eventDetail") {
                     EventDetailView(navController = navController)
+                }
+                composable("eventAttendees") {
+                    EventAttendees(navController = navController)
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.example.avents.view.event
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,19 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.example.avents.R
 import com.example.avents.ui.theme.Primary
@@ -74,19 +67,25 @@ fun EventDetailView(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            EventDetails(modifier = Modifier.padding(horizontal = 16.dp))
+            EventDetails(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                navController = navController
+            )
         }
     }
 }
 
 @Composable
-fun EventDetails(modifier: Modifier = Modifier) {
+fun EventDetails(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (eventCoverPhoto, eventTitle, eventType, eventFacultyName, eventDescription, dateBox, location, time, registerButton) = createRefs()
+        val (eventCoverPhoto, eventTitle, eventType, eventFacultyName, eventDescription, dateBox, location, time, registerButton, participantCard) = createRefs()
 
         Image(
             painter = painterResource(R.drawable.eventphoto1),
@@ -231,12 +230,26 @@ fun EventDetails(modifier: Modifier = Modifier) {
             )
         }
 
+        ParticipantCard(
+            modifier = Modifier
+                .constrainAs(participantCard) {
+                    top.linkTo(dateBox.bottom, margin = 16.dp)
+                    start.linkTo(parent.start)
+                },
+            navController = navController,
+            onClick = {
+                navController.navigate("eventAttendees")
+            }
+        )
+
         Button(
-            onClick = { /* Handle Submit */ },
+            onClick = {
+//                navController.navigate("eventAttendees")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(registerButton) {
-                    top.linkTo(dateBox.bottom, margin = 16.dp)
+                    top.linkTo(participantCard.bottom, margin = 16.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
