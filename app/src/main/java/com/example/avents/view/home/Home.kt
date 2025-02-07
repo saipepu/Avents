@@ -129,7 +129,7 @@ fun HomeView(
                 top.linkTo(upcomingEvents.bottom, margin = 12.dp)
             },
             onEventClick = { eventName ->
-                navController.navigate("eventEditingView/$eventName")
+                navController.navigate("eventDetail/$eventName")
             }
         )
 

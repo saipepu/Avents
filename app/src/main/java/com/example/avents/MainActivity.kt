@@ -14,8 +14,10 @@ import androidx.navigation.navArgument
 import com.example.avents.view.auth.AuthView
 import com.example.avents.view.auth.OnBoardingView
 import com.example.avents.view.components.FeedbackView
+import com.example.avents.view.event.EventAttendees
 import com.example.avents.view.event.EventCreationForm
 import com.example.avents.view.event.EventCreationScreen
+import com.example.avents.view.event.EventDetailView
 import com.example.avents.view.home.HomeView
 import com.example.avents.view.profile.EventEditingView
 import com.example.avents.view.profile.ProfileDetailView
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "event") {
+            NavHost(navController = navController, startDestination = "auth") {
                 composable("auth") {
                     AuthView(navController = navController)
                 }
@@ -52,6 +54,12 @@ class MainActivity : ComponentActivity() {
                 composable("eventEditingView/{eventName}") { backStackEntry ->
                     val eventName = backStackEntry.arguments?.getString("eventName") ?: "Unknown"
                     EventEditingView(navController = navController, eventName)
+                }
+                composable("eventDetail/{eventName}") {
+                    EventDetailView(navController = navController)
+                }
+                composable("eventAttendees") {
+                    EventAttendees(navController = navController)
                 }
                 composable(
                     "feedbackView/{message}/{navigateLink}/{buttonText}/{imageResource}",
