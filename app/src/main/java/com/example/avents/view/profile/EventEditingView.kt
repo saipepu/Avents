@@ -2,6 +2,9 @@ package com.example.avents.view.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +17,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Festival
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,14 +37,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.avents.R
+import com.example.avents.view.components.DateRow
+import com.example.avents.view.components.TextFieldRow
+import com.example.avents.view.components.TimeRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +70,7 @@ fun EventEditingView(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                title = { androidx.compose.material3.Text( text = "Event Detail" ) },
+                title = { Text( text = "Event Detail" ) },
                 actions = {
                     IconButton(onClick = { isEditing = !isEditing }) {
                         Icon(
@@ -60,7 +80,8 @@ fun EventEditingView(
                     }
                 }
             )
-        }
+        },
+        bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
@@ -109,6 +130,41 @@ fun EventEditingView(
                 TimeRow(label = "To", value = endTime, isEditing = isEditing) { endTime = it }
                 TextFieldRow(label = "Description", value = description, isEditing = isEditing) { description = it }
             }
+        }
+    }
+}
+
+data class NavItem(
+    val name: String,
+    val icon: ImageVector,
+    val link: String,
+)
+
+@Composable
+fun BottomNavigationBar(navController: NavHostController) {
+    val items = listOf(
+        NavItem("Home", Icons.Default.Home, "home"),
+        NavItem("Profile", Icons.Default.Person, "profile"),
+        NavItem("Event", Icons.Default.Festival, "event")
+    )
+    NavigationBar {
+        val currentBackStackEntry = navController.currentBackStackEntryAsState()
+        val currentDestination = currentBackStackEntry.value?.destination?.route
+
+        items.forEach { item ->
+            NavigationBarItem(
+                icon = { Icon(item.icon, contentDescription = item.name) },
+                label = { Text(item.name) },
+                selected = currentDestination == item.name.lowercase(),
+                onClick = {
+                    if (currentDestination != item.link) {
+                        navController.navigate(item.link) {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+                    }
+                }
+            )
         }
     }
 }

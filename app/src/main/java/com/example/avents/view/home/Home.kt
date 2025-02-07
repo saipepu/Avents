@@ -3,10 +3,14 @@ package com.example.avents.view.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -50,27 +55,30 @@ fun HomeView(
         val (profileImage, userName, searchBar, searchButton, upcomingEvents, upcomingEventsContainer, eventCard, currentEvents, pastEvents) = createRefs()
         val focusRequester = remember { FocusRequester() }
 
-        Image(
-            painter = painterResource(id = R.drawable.person1),
-            contentDescription = "Profile Image",
+        Row(
             modifier = Modifier
-                .clip(CircleShape)
+                .clickable { navController.navigate("profile") }
                 .constrainAs(profileImage) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    width = Dimension.value(32.dp)
-                },
-            contentScale = ContentScale.Fit
-        )
-        Text(
-            text = "Sai Pe Pu",
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.constrainAs(userName) {
                 top.linkTo(parent.top)
-                start.linkTo(profileImage.end, margin = 10.dp)
-                centerVerticallyTo(profileImage)
-            }
-        )
+                start.linkTo(parent.start)
+            },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.person1),
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .width(45.dp)
+                    .height(45.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Fit
+            )
+            Text(
+                text = "Sai Pe Pu",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
         OutlinedTextField(
             value = searchValue,
             onValueChange = { searchValue = it },

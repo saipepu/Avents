@@ -52,10 +52,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil3.Uri
-import coil3.toAndroidUri
 import coil3.toCoilUri
 import com.example.avents.ui.theme.Primary
 import java.util.Calendar
+import com.example.avents.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,13 +80,13 @@ fun EventCreationForm(navController: NavHostController) {
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            FormView(modifier = Modifier.padding(horizontal = 16.dp))
+            FormView(modifier = Modifier.padding(horizontal = 16.dp), navController)
         }
     }
 }
 
 @Composable
-fun FormView(modifier: Modifier = Modifier) {
+fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
     var eventName by remember { mutableStateOf("") }
     var eventDetails by remember { mutableStateOf("") }
     var eventDescription by remember { mutableStateOf("") }
@@ -180,12 +180,13 @@ fun FormView(modifier: Modifier = Modifier) {
             // Show the button if no image is selected
             Button(
                 onClick = { launcher.launch("image/*") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .constrainAs(eventImageButton) {
-                    top.linkTo(eventImageLabel.bottom, margin = 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                        top.linkTo(eventImageLabel.bottom, margin = 8.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
             ) {
                 Text(text = "Upload Image", color = Color.White)
             }
@@ -329,7 +330,20 @@ fun FormView(modifier: Modifier = Modifier) {
 
         // Submit Button
         Button(
-            onClick = { /* Handle Submit */ },
+            onClick = {
+                val message = "You have successfully created an Event 🎉."
+                val navigateLink = "profile"
+                val buttonText = "Next"
+                val imageResource = R.drawable.success
+
+                // Ensure the parameters are URL encoded to handle spaces or special characters
+                val encodedMessage = android.net.Uri.encode(message)
+                val encodedNavigateLink = android.net.Uri.encode(navigateLink)
+                val encodedButtonText = android.net.Uri.encode(buttonText)
+                val encodedImageResource = android.net.Uri.encode(imageResource.toString())
+
+                navController.navigate("feedbackView/$encodedMessage/$encodedNavigateLink/$encodedButtonText/$encodedImageResource")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(submitButton) {
