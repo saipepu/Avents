@@ -2,6 +2,8 @@ package com.example.avents.view.event
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
@@ -51,7 +54,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil3.Uri
+import android.net.Uri
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import coil3.toCoilUri
 import com.example.avents.ui.theme.Primary
 import java.util.Calendar
@@ -63,6 +72,11 @@ fun EventCreationForm(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
                 title = {
                     Text(
                         text = "Event Details",
@@ -80,7 +94,7 @@ fun EventCreationForm(navController: NavHostController) {
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            FormView(modifier = Modifier.padding(horizontal = 16.dp), navController)
+            FormView(modifier = Modifier, navController)
         }
     }
 }
@@ -95,6 +109,7 @@ fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
     var eventDate by remember { mutableStateOf("") }
     var eventTime by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
     // Date and Time Picker State
     val context = LocalContext.current
@@ -125,12 +140,19 @@ fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: android.net.Uri? ->
-            imageUri = uri?.toCoilUri()
-            uri?.let {
-                println("Selected image URI: $it")
-            }
+            imageUri = uri
+            println("Selected image URI: $imageUri")
         }
     )
+
+    imageBitmap?.let {
+        Image(
+            bitmap = it,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Crop
+        )
+    }
 
     ConstraintLayout(
         modifier = modifier
@@ -165,55 +187,13 @@ fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
             singleLine = true
         )
 
-        // Image Label and Button
-        Text(
-            text = "Image",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.constrainAs(eventImageLabel) {
-                top.linkTo(eventNameField.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        if (imageUri == null) {
-            // Show the button if no image is selected
-            Button(
-                onClick = { launcher.launch("image/*") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .constrainAs(eventImageButton) {
-                        top.linkTo(eventImageLabel.bottom, margin = 8.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            ) {
-                Text(text = "Upload Image", color = Color.White)
-            }
-        } else {
-            Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Event Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(top = 10.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .constrainAs(eventImageButton) {
-                        top.linkTo(eventImageLabel.bottom, margin = 16.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            )
-        }
-
         // Event Location
         Text(
             text = "Location",
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.constrainAs(eventLocationLabel) {
-                top.linkTo(eventImageButton.bottom, margin = 16.dp)
+                top.linkTo(eventNameField.bottom, margin = 16.dp)
                 start.linkTo(parent.start)
             }
         )
@@ -326,6 +306,60 @@ fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
             maxLines = 4
         )
 
+        // Image Label and Button
+        Text(
+            text = "Image",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.constrainAs(eventImageLabel) {
+                top.linkTo(eventDescriptionField.bottom, margin = 16.dp)
+                start.linkTo(parent.start)
+            }
+        )
+
+        Button(
+            onClick = { launcher.launch("image/*") },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(eventImageButton) {
+                    top.linkTo(eventImageLabel.bottom, margin = 8.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            Text(text = "Upload Image", color = Color.Black)
+        }
+
+        if (imageUri != null) {
+            // Show the button if no image is selected
+            AsyncImage(
+                model = imageUri,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .height(200.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .constrainAs(imagePreview) {
+                        top.linkTo(eventImageButton.bottom, margin = 8.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            Spacer(
+                modifier = Modifier
+                    .constrainAs(imagePreview) {
+                        top.linkTo(eventImageButton.bottom, margin = 8.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         // Submit Button
@@ -347,7 +381,7 @@ fun FormView(modifier: Modifier = Modifier, navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(submitButton) {
-                    top.linkTo(eventDescriptionField.bottom, margin = 16.dp)
+                    top.linkTo(imagePreview.bottom, margin = 16.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -411,4 +445,27 @@ fun UnitDropdown(
             }
         }
     }
+
 }
+
+@Composable
+fun DisplayImageFromUri(context: Context, imageUri: Uri) {
+    // ContentResolver to get the image
+    val resolver = context.contentResolver
+    val inputStream = resolver.openInputStream(imageUri)
+
+    // Load Bitmap from InputStream
+    val bitmap = inputStream?.let { BitmapFactory.decodeStream(it) }
+
+    // Use ImageBitmap or Image if needed
+    bitmap?.let {
+        val imageBitmap = it.asImageBitmap()
+        Image(
+            bitmap = imageBitmap,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+

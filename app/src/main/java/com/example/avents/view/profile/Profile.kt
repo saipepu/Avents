@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -40,98 +41,105 @@ import com.example.avents.view.home.EventList
 fun ProfileView(
     navController: NavHostController,
 ) {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        val (profileBackground, profileImage, userName, roleDropdown, profileDetailButton, tabscreen, onGoingEventContainer, upComingEventContainer) = createRefs()
-
-        Image(
-            painter = painterResource(R.drawable.background_wallpaper),
-            contentDescription = "Profile Background",
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) {paddingValues ->
+        ConstraintLayout(
             modifier = Modifier
-                .constrainAs(profileBackground) {
-                    top.linkTo(parent.top, margin = -30.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .fillMaxWidth()
-                .height(180.dp)
-        )
-
-        Image(
-            painter = painterResource(R.drawable.profilepic),
-            contentDescription = "Profile Image",
-            modifier = Modifier
-                .constrainAs(profileImage) {
-                top.linkTo(profileBackground.bottom, margin = -50.dp)
-                start.linkTo(parent.start)
-                }
-                .width(100.dp)
-                .height(100.dp)
-                .padding(horizontal = 16.dp)
-        )
-
-        Text(
-            text = "Justin Noodles",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .constrainAs(userName) {
-                    top.linkTo(profileImage.bottom)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-        )
-
-        var selectedRole by remember { mutableStateOf("Audience") }
-
-        RoleDropdown(
-            selectedRole = selectedRole,
-            onRoleSelected = { role -> selectedRole = role },
-            modifier = Modifier
-                .constrainAs(roleDropdown) {
-                    top.linkTo(userName.bottom)
-                    start.linkTo(parent.start)
-                }
-                .padding(horizontal = 16.dp)
-        )
-
-        Button(
-            onClick = {
-                navController.navigate("profileDetail")
-            },
-            modifier = Modifier
-                .constrainAs(profileDetailButton) {
-                    top.linkTo(userName.bottom)
-                    start.linkTo(roleDropdown.end)
-                    end.linkTo(parent.end)
-                }
-                .width(160.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Primary
-            ),
-            shape = RoundedCornerShape(10.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color.White)
+                .padding(bottom = 160.dp)
         ) {
-            Text(
-                text = "Profile Detail"
+            val (profileBackground, profileImage, userName, roleDropdown, profileDetailButton, tabscreen, onGoingEventContainer, upComingEventContainer) = createRefs()
+
+            Image(
+                painter = painterResource(R.drawable.background_wallpaper),
+                contentDescription = "Profile Background",
+                modifier = Modifier
+                    .constrainAs(profileBackground) {
+                        top.linkTo(parent.top, margin = -30.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth()
+                    .height(180.dp)
             )
-        }
 
-        TabScreen(
-            modifier = Modifier
-                .constrainAs(tabscreen) {
-                    top.linkTo(roleDropdown.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .fillMaxWidth(),
-            onNavigate = { eventRoute ->
-                navController.navigate(eventRoute) // Navigate when an event is clicked
+            Image(
+                painter = painterResource(R.drawable.profilepic),
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .constrainAs(profileImage) {
+                        top.linkTo(profileBackground.bottom, margin = -50.dp)
+                        start.linkTo(parent.start)
+                    }
+                    .width(100.dp)
+                    .height(100.dp)
+                    .padding(horizontal = 16.dp)
+            )
+
+            Text(
+                text = "Justin Noodles",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .constrainAs(userName) {
+                        top.linkTo(profileImage.bottom)
+                        start.linkTo(parent.start, margin = 16.dp)
+                    }
+            )
+
+            var selectedRole by remember { mutableStateOf("Audience") }
+
+            RoleDropdown(
+                selectedRole = selectedRole,
+                onRoleSelected = { role -> selectedRole = role },
+                modifier = Modifier
+                    .constrainAs(roleDropdown) {
+                        top.linkTo(userName.bottom)
+                        start.linkTo(parent.start)
+                    }
+                    .padding(horizontal = 16.dp)
+            )
+
+            Button(
+                onClick = {
+                    navController.navigate("profileDetail")
+                },
+                modifier = Modifier
+                    .constrainAs(profileDetailButton) {
+                        top.linkTo(userName.bottom)
+                        start.linkTo(roleDropdown.end)
+                        end.linkTo(parent.end)
+                    }
+                    .width(160.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Primary
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(
+                    text = "Profile Detail"
+                )
             }
-        )
 
+            TabScreen(
+                modifier = Modifier
+                    .constrainAs(tabscreen) {
+                        top.linkTo(roleDropdown.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth(),
+                onNavigate = { eventRoute ->
+                    navController.navigate(eventRoute) // Navigate when an event is clicked
+                }
+            )
+
+        }
     }
+
 }
 
 @Composable
@@ -140,7 +148,7 @@ fun TabScreen(modifier: Modifier = Modifier, onNavigate: (String) -> Unit = {}) 
 
     val tabs = listOf("Ongoing", "Upcoming")
 
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = modifier.padding(horizontal = 16.dp).padding(bottom = 120.dp)) {
         TabRow(
             selectedTabIndex = tabIndex,
             modifier = Modifier.fillMaxWidth(),
@@ -175,7 +183,7 @@ fun OngoingScreen(
 ) {
     EventList(
         events = onGoingEventList,
-        modifier = modifier.padding(top = 10.dp, bottom = 150.dp),
+        modifier = modifier.padding(top = 10.dp),
         onEventClick = { eventName ->
             onNavigate("eventEditingView/$eventName")
         }
@@ -189,7 +197,7 @@ fun UpcomingScreen(
 ) {
     EventList(
         events = upComingEventList,
-        modifier = modifier.padding(top = 10.dp, bottom = 150.dp),
+        modifier = modifier.padding(top = 10.dp),
         onEventClick = { eventName ->
             onNavigate("eventEditingView/$eventName")
         }

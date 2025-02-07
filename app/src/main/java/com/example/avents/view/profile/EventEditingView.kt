@@ -81,7 +81,6 @@ fun EventEditingView(
                 }
             )
         },
-        bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
@@ -153,6 +152,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
         items.forEach { item ->
             NavigationBarItem(
+                modifier = Modifier.height(60.dp),
                 icon = { Icon(item.icon, contentDescription = item.name) },
                 label = { Text(item.name) },
                 selected = currentDestination == item.name.lowercase(),

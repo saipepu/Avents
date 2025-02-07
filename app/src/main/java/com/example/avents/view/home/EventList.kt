@@ -16,7 +16,6 @@ fun EventList(
 ) {
     LazyColumn(
         modifier = Modifier
-            .padding(bottom = 200.dp)
             .then(modifier)
     ) {
         items(events) { event ->
