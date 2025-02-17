@@ -18,6 +18,8 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,11 +38,20 @@ import com.example.avents.model.onGoingEventList
 import com.example.avents.model.upComingEventList
 import com.example.avents.ui.theme.Primary
 import com.example.avents.view.home.EventList
+import com.example.avents.viewModel.ProfileViewModel
 
 @Composable
 fun ProfileView(
     navController: NavHostController,
+    profileViewModel: ProfileViewModel
 ) {
+    val user by profileViewModel.user.collectAsState()
+    val error by profileViewModel.error.collectAsState()
+
+    LaunchedEffect(Unit) {
+        profileViewModel.getUserById("67a660b3f4b4abe99fd80ac2")
+    }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) {paddingValues ->
@@ -80,7 +91,7 @@ fun ProfileView(
             )
 
             Text(
-                text = "Justin Noodles",
+                text = "John Doe ${user?.firstName}",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier

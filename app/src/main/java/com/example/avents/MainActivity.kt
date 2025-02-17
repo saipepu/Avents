@@ -3,8 +3,7 @@ package com.example.avents
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.imageResource
+import androidx.activity.viewModels
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,14 +21,17 @@ import com.example.avents.view.home.HomeView
 import com.example.avents.view.profile.EventEditingView
 import com.example.avents.view.profile.ProfileDetailView
 import com.example.avents.view.profile.ProfileView
+import com.example.avents.viewModel.ProfileViewModel
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val profileViewModel: ProfileViewModel by viewModels()
+
         setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "profile") {
+            NavHost(navController = navController, startDestination = "auth") {
                 composable("auth") {
                     AuthView(navController = navController)
                 }
@@ -40,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     HomeView(navController = navController) // Your Home Screen
                 }
                 composable("profile") {
-                    ProfileView(navController = navController)
+                    ProfileView(navController = navController, profileViewModel)
                 }
                 composable("profileDetail") {
                     ProfileDetailView(navController = navController)
